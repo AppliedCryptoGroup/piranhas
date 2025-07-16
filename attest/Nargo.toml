@@ -1,5 +1,5 @@
 [package]
-name = "recurse"
+name = "attest"
 type = "bin"
 authors = ["teddav"]
 
