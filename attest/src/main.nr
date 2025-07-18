@@ -5,15 +5,31 @@
 
 mod attest;
 
-fn main(
-    x: Field, 
-    y: pub Field,
-    expected_hash: pub Field,
-    pub_key_x: Field,
-    pub_key_y: Field,
-    signature: [u8; 64],
+fn main( 
+    v: Field,  // Merkle root 
+    w_path_elements: [Field; 10], // Merkle path
+    w_path_indices: [Field; 10], // Merkle path
+    k: Field,  // PRF key
+    rsp: Field, 
+    chall: Field,
+    t: Field,
+    pk_x: Field,  // manufacturer 
+    pk_y: Field,  // manufacturer 
+    sig: [u8; 64],  // by manufacturer 
     message: [u8; 10]
 ) {
-    attest::attest(x, y, expected_hash, pub_key_x, pub_key_y, signature, message);
+    attest::attest(
+        v,
+        w_path_elements, 
+        w_path_indices,
+        k,
+        rsp,
+        chall,
+        t,
+        pk_x,
+        pk_y,
+        sig,
+        message
+    );
 }
 
