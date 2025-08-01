@@ -4,3 +4,8 @@ package-lock.json
 **/proof/
 **/target/
 **/*/*.default
+**/*/*.DS_Store
+schnorr_input.json
+circom/*_cpp/
+circom/*_js/
+circom/*.r1cs
