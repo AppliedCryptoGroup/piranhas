@@ -1,7 +1,13 @@
 {
   "dependencies": {
+    "@aztec/aztec.js": "1.1.2",
+    "@aztec/accounts": "1.1.2",
+    "@aztec/stdlib": "1.1.2",
     "@aztec/bb.js": "0.82.0",
+    "@aztec/foundation": "^1.2.1",
     "@noir-lang/noir_js": "1.0.0-beta.2",
-    "@noir-lang/noir_wasm": "1.0.0-beta.2"
-  }
+    "@noir-lang/noir_wasm": "1.0.0-beta.2",
+    "buffer": "^6.0.3"
+  },
+  "type": "module"
 }
