@@ -81,17 +81,15 @@ pub fn attest(
     assert(valid_signature);
     assert_valid_signature(pub_key, signature, root_array);
 
-    let a = commitment;
-    let b = root;
-    let ab = a+b;
+    // let a = commitment;
+    // let b = root;
+    // let ab = a+b;
 
-    let at1 = commit_to_tag(a);
-    let at2 = append_tags(b, at1);
+    // let at1 = commit_to_tag(a);
+    // let at2 = append_tags(b, at1);
 
-    let expected_at2 = commit_to_tag(ab);
+    // let expected_at2 = commit_to_tag(ab);
 
-    assert_eq(at2, expected_at2);
-
-  
+    // assert_eq(at2, expected_at2);
 
 }

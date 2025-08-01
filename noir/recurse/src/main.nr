@@ -5,16 +5,28 @@ mod attest;
 fn main(
     verification_key: [Field; 128],
     proof: [Field; 456],
-    public_inputs: [Field; 2],
+    public_inputs: [Field; 3],
     key_hash: Field,
-    x: Field, 
-    y: pub Field, 
-    expected_hash: pub Field,
-    pub_key_x: Field,
-    pub_key_y: Field,
-    signature: [u8; 64],
-    message: [u8; 10]
+    w_path_elements: [Field; 10], // Merkle path
+    w_path_indices: [Field; 10], // Merkle path
+    k: Field,  // PRF key
+    rsp: Field, 
+    chall: Field,
+    t: pub Field,
+    pk_x: pub Field,  // manufacturer 
+    pk_y: pub Field,  // manufacturer 
+    sig: [u8; 64] // by manufacturer 
 ) {
     verify_proof(verification_key, proof, public_inputs, key_hash);
-    attest::attest(x, y, expected_hash, pub_key_x, pub_key_y, signature, message);
+    attest::attest(
+        w_path_elements, 
+        w_path_indices,
+        k,
+        rsp,
+        chall,
+        t,
+        pk_x,
+        pk_y,
+        sig
+    );
 }
