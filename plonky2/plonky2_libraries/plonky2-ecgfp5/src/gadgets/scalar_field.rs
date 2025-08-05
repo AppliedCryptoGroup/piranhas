@@ -27,7 +27,7 @@ impl<F: RichField> PartialWitnessScalar<F> for PartialWitness<F> {
 	fn set_scalar_target(&mut self, target: &BigUintTarget, value: Scalar) {
 		let value = value.to_canonical_biguint();
 		for (&limb, limb_value) in target.limbs.iter().zip(value.to_u32_digits()) {
-			self.set_target(limb.0, F::from_canonical_u32(limb_value));
+			let _ = self.set_target(limb.0, F::from_canonical_u32(limb_value));
 		}
 	}
 

@@ -161,7 +161,8 @@ impl<F: RichField + Extendable<D>, const D: usize> Gate<F, D> for U32RangeCheckG
 
     fn generators(&self, row: usize, _local_constants: &[F]) -> Vec<WitnessGeneratorRef<F, D>> {
         let gen = U32RangeCheckGenerator { gate: *self, row };
-        vec![WitnessGeneratorRef::new(gen.adapter())]
+        let x = WitnessGeneratorRef::new(gen.adapter());
+        vec![x]
     }
 
     fn num_wires(&self) -> usize {
@@ -222,7 +223,7 @@ impl<F: RichField + Extendable<D>, const D: usize> SimpleGenerator<F, D>
                 .collect::<Vec<_>>();
 
             for (b, b_value) in limbs.zip(limbs_value) {
-                out_buffer.set_target(b, b_value);
+                out_buffer.set_target(b, b_value)?;
             }
         }
         Ok(())

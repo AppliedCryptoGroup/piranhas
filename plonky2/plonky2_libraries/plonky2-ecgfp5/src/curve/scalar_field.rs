@@ -222,11 +222,11 @@ impl Field for Scalar {
         Self([n.0, n.1 as u64, 0, 0, 0])
     }
     
-    fn from_noncanonical_u64(n: u64) -> Self {
+    fn from_noncanonical_u64(_n: u64) -> Self {
         todo!()
     }
     
-    fn from_noncanonical_i64(n: i64) -> Self {
+    fn from_noncanonical_i64(_n: i64) -> Self {
         todo!()
     }
 }

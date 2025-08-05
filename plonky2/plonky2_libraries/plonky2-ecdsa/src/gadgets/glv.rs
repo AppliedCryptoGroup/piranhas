@@ -129,8 +129,8 @@ impl<F: RichField + Extendable<D>, const D: usize> SimpleGenerator<F,D>
 
         out_buffer.set_biguint_target(&self.k1.value, &k1.to_canonical_biguint());
         out_buffer.set_biguint_target(&self.k2.value, &k2.to_canonical_biguint());
-        out_buffer.set_bool_target(self.k1_neg, k1_neg);
-        out_buffer.set_bool_target(self.k2_neg, k2_neg);
+        out_buffer.set_bool_target(self.k1_neg, k1_neg)?;
+        out_buffer.set_bool_target(self.k2_neg, k2_neg)?;
         Ok(())
     }
     

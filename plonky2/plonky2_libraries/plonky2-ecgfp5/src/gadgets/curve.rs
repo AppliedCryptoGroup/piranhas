@@ -10,8 +10,6 @@ use plonky2::plonk::circuit_builder::CircuitBuilder;
 use plonky2_ecdsa::gadgets::nonnative::NonNativeTarget;
 use plonky2_ecdsa::gadgets::split_nonnative::CircuitBuilderSplit;
 use plonky2_field::extension::Extendable;
-use plonky2_field::extension::quintic::QuinticExtension;
-use plonky2_field::goldilocks_field::GoldilocksField;
 
 use super::base_field::PartialWitnessQuinticExt;
 
@@ -415,7 +413,7 @@ impl<W: PartialWitnessQuinticExt<GFp>> PartialWitnessCurve<GFp> for W {
         let CurveTarget(([x, y], is_inf)) = target;
         self.set_quintic_ext_target(x, value.x);
         self.set_quintic_ext_target(y, value.y);
-        self.set_bool_target(is_inf, value.is_inf);
+        let _ = self.set_bool_target(is_inf, value.is_inf);
     }
 }
 

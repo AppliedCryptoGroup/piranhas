@@ -512,35 +512,35 @@ impl<F: RichField + Extendable<D>, const D: usize> SimpleGenerator<F, D>
             .map(|x| F::from_canonical_u64(*x))
             .collect();
 
-        out_buffer.set_wire(local_wire(self.gate.wire_result_bool()), result);
+        out_buffer.set_wire(local_wire(self.gate.wire_result_bool()), result)?;
         out_buffer.set_wire(
             local_wire(self.gate.wire_most_significant_diff()),
             most_significant_diff,
-        );
+        )?;
         for i in 0..self.gate.num_chunks {
             out_buffer.set_wire(
                 local_wire(self.gate.wire_first_chunk_val(i)),
                 first_input_chunks[i],
-            );
+            )?;
             out_buffer.set_wire(
                 local_wire(self.gate.wire_second_chunk_val(i)),
                 second_input_chunks[i],
-            );
+            )?;
             out_buffer.set_wire(
                 local_wire(self.gate.wire_equality_dummy(i)),
                 equality_dummies[i],
-            );
-            out_buffer.set_wire(local_wire(self.gate.wire_chunks_equal(i)), chunks_equal[i]);
+            )?;
+            out_buffer.set_wire(local_wire(self.gate.wire_chunks_equal(i)), chunks_equal[i])?;
             out_buffer.set_wire(
                 local_wire(self.gate.wire_intermediate_value(i)),
                 intermediate_values[i],
-            );
+            )?;
         }
         for i in 0..self.gate.chunk_bits() + 1 {
             out_buffer.set_wire(
                 local_wire(self.gate.wire_most_significant_diff_bit(i)),
                 msd_bits[i],
-            );
+            )?;
         }
         Ok(())
     }

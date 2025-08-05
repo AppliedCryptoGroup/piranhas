@@ -1,22 +1,22 @@
-use alloc::string::{String, ToString};
-use alloc::vec;
+//use alloc::string::{String, ToString};
+//use alloc::vec;
 use alloc::vec::Vec;
-use core::marker::PhantomData;
-use plonky2::plonk::circuit_data::CommonCircuitData;
-use plonky2::util::serialization::{Buffer, IoResult, Read, Write};
+//use core::marker::PhantomData;
+//use plonky2::plonk::circuit_data::CommonCircuitData;
+//use plonky2::util::serialization::{Buffer, IoResult, Read, Write};
 
 use plonky2::field::extension::Extendable;
 use plonky2::hash::hash_types::RichField;
-use plonky2::iop::generator::{GeneratedValues, SimpleGenerator};
+//use plonky2::iop::generator::{GeneratedValues, SimpleGenerator};
 use plonky2::iop::target::Target;
-use plonky2::iop::witness::{PartitionWitness, Witness};
+//use plonky2::iop::witness::{PartitionWitness, Witness};
 use plonky2::plonk::circuit_builder::CircuitBuilder;
 
 use crate::gates::add_many_u32::U32AddManyGate;
 use crate::gates::arithmetic_u32::U32ArithmeticGate;
 use crate::gates::subtraction_u32::U32SubtractionGate;
-use crate::serialization::{ReadU32, WriteU32};
-use crate::witness::GeneratedValuesU32;
+//use crate::serialization::{ReadU32, WriteU32};
+//use crate::witness::GeneratedValuesU32;
 
 #[derive(Clone, Copy, Debug)]
 pub struct U32Target(pub Target);
@@ -234,6 +234,8 @@ impl<F: RichField + Extendable<D>, const D: usize> CircuitBuilderU32<F, D>
     }
 }
 
+// apparently this is dead code, so commented out
+/*
 #[derive(Debug)]
 struct SplitToU32Generator<F: RichField + Extendable<D>, const D: usize> {
     x: Target,
@@ -282,6 +284,7 @@ impl<F: RichField + Extendable<D>, const D: usize> SimpleGenerator<F, D>
         Ok(())
     }
 }
+*/
 
 #[cfg(test)]
 mod tests {

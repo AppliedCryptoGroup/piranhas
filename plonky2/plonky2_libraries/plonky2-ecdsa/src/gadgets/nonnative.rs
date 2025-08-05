@@ -495,8 +495,7 @@ impl<F: RichField + Extendable<D>, const D: usize, FF: PrimeField> SimpleGenerat
         };
 
         out_buffer.set_biguint_target(&self.sum.value, &sum_reduced);
-        out_buffer.set_bool_target(self.overflow, overflow);
-        Ok(())
+        out_buffer.set_bool_target(self.overflow, overflow)
     }
     
     fn id(&self) -> String {
@@ -611,8 +610,7 @@ impl<F: RichField + Extendable<D>, const D: usize, FF: PrimeField> SimpleGenerat
         };
 
         out_buffer.set_biguint_target(&self.diff.value, &diff_biguint);
-        out_buffer.set_bool_target(self.overflow, overflow);
-        Ok(())
+        out_buffer.set_bool_target(self.overflow, overflow)
     }
     
     fn id(&self) -> String {

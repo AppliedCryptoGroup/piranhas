@@ -359,8 +359,8 @@ impl<F: RichField + Extendable<D>, const D: usize> SimpleGenerator<F, D>
         let output_carry_wire = local_wire(self.gate.wire_ith_output_carry(self.i));
         let output_result_wire = local_wire(self.gate.wire_ith_output_result(self.i));
 
-        out_buffer.set_wire(output_carry_wire, output_carry);
-        out_buffer.set_wire(output_result_wire, output_result);
+        out_buffer.set_wire(output_carry_wire, output_carry)?;
+        out_buffer.set_wire(output_result_wire, output_result)?;
 
         let num_result_limbs = U32AddManyGate::<F, D>::num_result_limbs();
         let num_carry_limbs = U32AddManyGate::<F, D>::num_carry_limbs();
@@ -381,7 +381,7 @@ impl<F: RichField + Extendable<D>, const D: usize> SimpleGenerator<F, D>
 
         for (j, limb) in result_limbs.chain(carry_limbs).enumerate() {
             let wire = local_wire(self.gate.wire_ith_output_jth_limb(self.i, j));
-            out_buffer.set_wire(wire, limb);
+            out_buffer.set_wire(wire, limb)?;
         }
         Ok(())
     }
