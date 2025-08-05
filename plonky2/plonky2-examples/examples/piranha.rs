@@ -135,7 +135,7 @@ fn single_client_proof(
 	let pk_tgt = builder.curve_constant(pk.to_weierstrass());
 
 	// r_v = s*G + e*pk
-	let r_v = builder.curve_muladd_2(
+	let r_v = builder.curve_muladd_2( // actually, this should be much more expensive than tag aggregation
 		g_tgt,
 		pk_tgt,
 		&s_tgt,
@@ -149,7 +149,6 @@ fn single_client_proof(
 	);
 	let e_v = builder.encode_quintic_ext_as_scalar(e_v_ext);
     // TODO debug and verify
-    
     
     let mut pw = PartialWitness::new();
     pw.set_target(rsp_tgt,rsp)?;
