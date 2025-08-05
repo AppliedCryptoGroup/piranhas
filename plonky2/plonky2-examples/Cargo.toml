@@ -1,0 +1,23 @@
+[package]
+name = "plonky2-examples"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+log = { version = "0.4.14", default-features = false }
+
+plonky2 = { path="../plonky2_libraries/plonky2/plonky2" }
+plonky2_field = { path="../plonky2_libraries/plonky2/field" }
+plonky2_ecdsa = { path="../plonky2_libraries/plonky2-ecdsa" }
+plonky2_u32 = { path="../plonky2_libraries/plonky2-u32" }
+plonky2_ecgfp5 = { path="../plonky2_libraries/plonky2-ecgfp5" }
+
+anyhow = "1"
+
+env_logger = { version = "0.9.0", default-features = false }
+rand = { version = "0.8.5", default-features = false, features = ["getrandom"] }
+
+[dev-dependencies]
+rand = { version = "0.8.5", features = ["min_const_gen"] }
