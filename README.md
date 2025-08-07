@@ -1,3 +1,25 @@
+# Recursive circuit in Plonky2
+
+The codes are using [Plonky2](https://github.com/0xPolygonZero/plonky2) library developed by Polygon.
+
+Piranha example generates a proof for a single attestation.
+Piranhas example aggregates two recursive proofs in one.
+
+To run the codes note that the version of Plobky2 should be **v.1.1.0**
+
+Set the rust on nightly version and run the benchmark script:
+
+```bash
+rustup override set nightly
+
+cargo build --release
+
+./benchmark.sh
+
+```
+
+
+
 # Recursive circuit in Noir
 
 ## bb
