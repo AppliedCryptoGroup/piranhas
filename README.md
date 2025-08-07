@@ -1,3 +1,22 @@
+# Circom circuit
+
+The main circuit, attest.circom, computes the attestation value, verifies the Merkle path, and checks the Schnorr signature of the root. The Circom implementation does not support recursion; we use it to demonstrate the practicality of our scheme in comparison to related work.
+
+Install [Circom](https://docs.circom.io/getting-started/installation/#installing-dependencies).
+
+If the system is macOS, you’d need to install coreutils for time measurement via:
+
+```bash
+brew install coreutils
+```
+
+Then run the bechmarks:
+
+```bash
+./benchmark.sh
+```
+
+
 # Recursive circuit in Plonky2
 
 The codes are using [Plonky2](https://github.com/0xPolygonZero/plonky2) library developed by Polygon.
