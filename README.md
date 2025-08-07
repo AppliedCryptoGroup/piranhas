@@ -41,6 +41,8 @@ cargo build --release
 
 # Recursive circuit in Noir
 
+The attest circuit computes a single attestation proof (R_att), the aggregate circuit aggregates two recursive proofs in one (R_agg).
+
 ## bb
 
 This was last tested with `bb` 0.82.0.  
