@@ -17,6 +17,13 @@ use super::base_field::PartialWitnessQuinticExt;
 #[repr(transparent)]
 pub struct CurveTarget(([QuinticExtensionTarget; 2], BoolTarget));
 
+// implemented this myself
+impl CurveTarget {
+    pub fn new(x: QuinticExtensionTarget, y: QuinticExtensionTarget, is_inf: BoolTarget) -> Self {
+        CurveTarget(([x, y], is_inf))
+    }
+}
+
 pub trait CircuitBuilderEcGFp5 {
     fn add_virtual_curve_target(&mut self) -> CurveTarget;
     fn register_curve_public_input(&mut self, point: CurveTarget);
