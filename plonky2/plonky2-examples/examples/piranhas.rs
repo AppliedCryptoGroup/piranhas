@@ -242,6 +242,53 @@ where
     Ok((proof, data.verifier_only, data.common))
 }
 
+fn simple_recursive_proof_wrapper(
+    inner: &ProofTuple<F, C, D>,
+    config: &CircuitConfig,
+) -> Result<ProofTuple<F, C, D>>
+where
+    <PoseidonGoldilocksConfig as GenericConfig<D>>::Hasher: AlgebraicHasher<F>,
+{
+    let mut builder = CircuitBuilder::<F, D>::new(config.clone());
+
+    let (inner_proof, inner_vd, inner_cd) = inner;
+    let pt = builder.add_virtual_proof_with_pis(inner_cd);
+
+    let inner_data = builder.add_virtual_verifier_data(inner_cd.config.fri_config.cap_height);
+
+    builder.verify_proof::<C>(&pt, &inner_data, inner_cd);
+
+    let inner_inputs: Vec<F> = inner_proof.public_inputs.clone();
+
+    // Create targets in the new circuit for each public input
+    let input_targets: Vec<Target> = inner_inputs.iter()
+        .map(|_| builder.add_virtual_target())
+        .collect();
+
+    // Register those targets as public inputs of the current circuit
+    builder.register_public_inputs(&input_targets);
+    
+    let data = builder.build::<C>();
+
+    let mut pw = PartialWitness::new();
+    pw.set_proof_with_pis_target(&pt, inner_proof)?;
+    pw.set_verifier_data_target(&inner_data, inner_vd)?;
+    // set the correct value of the output targets
+    for (target, value) in input_targets.iter().zip(inner_inputs.iter()) {
+        pw.set_target(*target, *value)?;
+    }
+
+
+    let mut timing = TimingTree::new("prove rec", Level::Info);
+    let proof = prove::<F, C, D>(&data.prover_only, &data.common, pw, &mut timing)?;
+    timing.print();
+
+    data.verify(proof.clone())?;
+    println!("Successfully generated a recursive proof");
+
+    Ok((proof, data.verifier_only, data.common))
+}
+
 
 fn double_recursive_proof(
     inner: &ProofTuple<F, C, D>,
@@ -337,9 +384,11 @@ fn main() -> Result<()> {
 
     // do a recursive proof
     let config = CircuitConfig::standard_recursion_config(); // does not require zero-knowledge
-    let outer = recursive_proof_wrapper(&inner, &config)?;
-    let outer2 = recursive_proof_wrapper(&inner2, &config)?;
-    let _outer_agg = double_recursive_proof(&outer, &outer2, &config)?;
+    let outer11 = recursive_proof_wrapper(&inner, &config)?;
+    let outer12 = simple_recursive_proof_wrapper(&outer11, &config)?;
+    let outer21 = recursive_proof_wrapper(&inner2, &config)?;
+    let outer22 = simple_recursive_proof_wrapper(&outer21, &config)?;
+    let _outer_agg = double_recursive_proof(&outer12, &outer22, &config)?;
 
     Ok(())
 }
