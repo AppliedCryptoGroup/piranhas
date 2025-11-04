@@ -1,139 +1,262 @@
-# Circom circuit
+# PIRANHAS — Artifact Documentation
 
-The main circuit, attest.circom, computes the attestation value, verifies the Merkle path, and checks the Schnorr signature of the root. The Circom implementation does not support recursion; we use it to demonstrate the practicality of our scheme in comparison to related work.
+## Overview
 
-Install [Circom](https://docs.circom.io/getting-started/installation/#installing-dependencies).
+In this paper, we address two key challenges in **remote attestation (RA)** protocols:
 
-If the system is macOS, you’d need to install coreutils for time measurement via:
+1. **Public verifiability**, and
+2. **Privacy protection**.
+
+We present **PIRANHAS**, a *publicly verifiable, asynchronous, and anonymous attestation scheme* for both individual devices and swarms.
+
+Our approach leverages **zk-SNARKs** to transform any classical symmetric RA scheme into a **non-interactive, publicly verifiable, and privacy-preserving** construction.
+Verifiers can confirm the validity of attestations without learning any identifying information about participating devices.
+
+**PIRANHAS** also supports **aggregation of RA proofs** across the entire network using recursive zk-SNARKs.
+We provide an **open-source implementation** using both the **Noir** and **Plonky2** frameworks, and we compare their practicality.
+We achieve an **aggregation runtime of 356 ms**.
+
+🔗 **Repository:** [https://anonymous.4open.science/r/piranhas](https://anonymous.4open.science/r/piranhas)
+📄 The repository includes all code required to reproduce the results presented in **Section V** (Tables III and IV).
+
+---
+
+## Description & Requirements
+
+### Access
+
+The implementation is publicly available at:
+👉 [https://anonymous.4open.science/r/piranhas](https://anonymous.4open.science/r/piranhas)
+
+> **Note:** A permanent GitHub link and Zenodo DOI will be added in the camera-ready version.
+
+### Hardware Dependencies
+
+None.
+
+### Software Dependencies
+
+All experiments are reproducible on **commodity hardware** running **Linux** or **macOS**.
+Benchmark scripts and pre-configured inputs are provided for all ZK circuits.
+
+**Required proving backends:**
+
+* Circom
+* Noir / Ultra_Honk
+* Plonky2
+
+To run benchmarks, execute `benchmark.sh` in each corresponding directory.
+
+---
+
+## Installation & Configuration
+
+Below are the installation steps for all required backends on Unix-based systems.
+
+### 1. Install Node.js
 
 ```bash
-brew install coreutils
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+source ~/.bashrc
+nvm install v22
 ```
 
-Then run the bechmarks:
+### 2. Install snarkjs
 
 ```bash
-./benchmark.sh
+npm install -g snarkjs
 ```
 
-
-# Recursive circuit in Plonky2
-
-The codes are using [Plonky2](https://github.com/0xPolygonZero/plonky2) library developed by Polygon.
-
-Piranha example generates a proof for a single attestation.
-Piranhas example aggregates two recursive proofs in one.
-
-To run the codes note that the version of Plobky2 should be **v.1.1.0**
-
-Set the rust on nightly version and run the benchmark script:
+### 3. Install Rust
 
 ```bash
-rustup override set nightly
+curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
+```
 
+### 4. Install Circom
+
+```bash
+git clone https://github.com/iden3/circom.git
+cd circom
 cargo build --release
-
-./benchmark.sh
-
 ```
 
-
-
-# Recursive circuit in Noir
-
-The attest circuit computes a single attestation proof (R_att), the aggregate circuit aggregates two recursive proofs in one (R_agg).
-
-## bb
-
-This was last tested with `bb` 0.82.0.  
-To install this version:
+### 5. Install Noir
 
 ```bash
+curl -L https://raw.githubusercontent.com/noir-lang/noirup/refs/heads/main/install | bash
+noirup -v 1.0.0-beta.3
+```
+
+### 6. Install Barretenberg
+
+```bash
+curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/refs/heads/next/barretenberg/bbup/install | bash
 bbup -v 0.82.0
 ```
 
-## "child" circuits
+---
 
-First build and prove the circuits that are going to be "recursed".
+## Experiment Workflow
 
-We can manually parse the proof and convert into an array of 32 bytes field elements, but there's an option in `bb` to do it automatically: `output_format`
+We implemented PIRANHAS using three zkSNARK proving backends:
 
-```bash
-cd circuit_1 && mkdir proof
+* **Groth16** (Circom)
+* **Ultra_Honk** (Noir)
+* **Plonky2**
 
-# compile the circuit and executes it
-nargo execute
+All results presented in **Section V** can be reproduced using the provided benchmark scripts for each backend.
 
-# generate proof
-bb prove -v -s ultra_honk -b "./target/circuit_1.json" -w "./target/circuit_1.gz" -o ./proof --output_format bytes_and_fields --honk_recursion 1 --recursive --init_kzg_accumulator
+---
 
-# generate VK
-bb write_vk -v -s ultra_honk -b "./target/circuit_1.json" -o ./proof --output_format bytes_and_fields --honk_recursion 1 --init_kzg_accumulator
+## Major Claims
 
-bb verify -s ultra_honk -k ./proof/vk -p ./proof/proof
-```
+We benchmarked our implementations on commodity hardware.
+This README focuses on the quantitative results reported in **Table III** and **Table IV** of **Section V**.
 
-In the `proof` directory, the files that are important for us:
+* **(C1)**:
+  The proposed protocol $\Pi_\text{ranha}$, when implemented using **Groth16**, achieves sub-second proving time on a laptop and remains practical on constrained hardware (e.g., Raspberry Pi Zero 2 W).
+  Its performance matches the state of the art.
+  Supported by **Experiment E1**.
 
-- proof_fields.json -> should be an array of 456 values + the number of public inputs
-- vk_fields.json -> should be an array of 128 values
+* **(C2)**:
+  The proposed aggregatable (recursive) zkSNARK proofs $\Pi_\text{ranhas}$ are practical on commodity hardware.
+  Supported by **Experiments E2** and **E3** using **Ultra_Honk** and **Plonky2**, respectively.
 
-### remove public inputs
+---
 
-> [!WARNING]
-> You need to remove the public inputs from proof_fields.json
+## Evaluation
 
-The first value in the proof_fields array should be the public input.  
-You need to remove it from the array!  
-If there are multiple public inputs, then remove all of them.
+### Experiment (E1) — Groth16 Performance
 
-In the end, proof_fields's length must be 456.
+**Estimated time:** ~1 human minute + 1–2 compute minutes
+**Preparation:** Install Circom and SnarkJS.
 
-_You'll actually need to copy the public inputs to the recursive circuit_
-
-#### circuit_1 example
-
-In circuit_1, we have 2 public inputs:
-
-- b = 4
-- c = 12
-
-So we'll remove the first 2 values which should be:
-
-- 0x0000000000000000000000000000000000000000000000000000000000000004
-- 0x000000000000000000000000000000000000000000000000000000000000000c
-
-## main circuit
-
-- Copy proof and VK to recurse/Prover.toml
-- Adapt the number of public inputs in the recurse circuit: `public_inputs: [Field; 2],`
-- Copy public inputs to recurse/Prover.toml
-
-_It seems like `key_hash` should be `0x0000000000000000000000000000000000000000000000000000000000000000` for now. Maybe that will change in the future_
+#### Execution
 
 ```bash
-cd recurse
-mkdir proof
-
-nargo execute
-
-bb prove -v -b "./target/recurse.json" -w "./target/recurse.gz" -o ./proof --recursive
-bb write_vk -v -b "./target/recurse.json" -o ./proof --honk_recursion 1
-bb verify -k ./proof/vk -p ./proof/proof
+cd circom
+./benchmark.sh
 ```
 
-## javascript
+#### Example Output
 
-In JS you can use the [prove.js](./prove.js) script.
+```
+Step 1: Install NPM dependencies
+Step 2: Compile circuit (attest.circom)
+Step 4: Generate witness using input.json
+Witness generated in 129 ms
+Step 5: Generate new Powers of Tau 
+Step 6: Prepare phase 2 for Groth16
+Step 7: Setup Groth16 proving key
+Step 8: Export verification key
+Step 9: Prove using Groth16
+Proof generated in 841 ms
+Step 10: Verify the proof
+[INFO]  snarkJS: OK!
+Verification completed in 466 ms
+```
 
-The @aztec/bb packages is missing a few options, so we need to adapt for now.
+Performance metrics for **Table IV** (Groth16) are visible in the output.
 
-### VK
+---
 
-The verifying key is not generated properly for now, so it needs to be generated in advance with `bb` and imported in the script.  
-It's fixed for a circuit, so it doesn't change based on user inputs
+### Experiment (E2) — Ultra_Honk Performance
 
-### Proof
+**Estimated time:** ~1 human minute + 2–5 compute minutes
 
-There's a function `generateProofForRecursiveAggregation` but it doesn't return the proof, only the proof formatted as fields so we can't verify it.  
-For that reason, I compute the fields myself with `proofToFields` and from the publicInputs returned by `generateProof`
+#### Preparation
+
+Ensure correct versions:
+
+```
+bb --version ==> 0.82.0
+nargo --version ==> 1.0.0-beta.3
+```
+
+If needed:
+
+```bash
+noirup -v 1.0.0-beta.3
+bbup -v 0.82.0
+```
+
+#### Execution
+
+```bash
+cd noir
+./run_benchmark.sh [1-5]
+```
+
+**Available benchmarks:**
+
+1. `attest-(Pi-zkRA)`
+2. `recurse-(R1)`
+3. `aggregate-(R2)`
+4. `optimized-(R2+R1)`
+5. `optimized-(2xR2+R1)`
+
+Benchmarks 1, 3, and 5 correspond to **Table III (Ultra_Honk)** under
+columns $\relation_\att$, $\relation_\agg$, and $2×\relation_\agg$.
+
+#### Example Output
+
+```
+Step 1 — Executing Nargo  
+Step 2 — Writing Verification Key  
+Step 3 — Proving  
+Step 4 — Verifying Proof
+```
+
+Performance metrics appear in log lines such as:
+
+```
+Proving phase took 12588 ms
+Verification phase took 40 ms
+```
+
+---
+
+### Experiment (E3) — Plonky2 Performance
+
+**Estimated time:** ~1 human minute + 2–15 compute minutes
+
+#### Preparation
+
+```bash
+cd plonky2/plonky2-examples/examples
+rustup override set nightly
+cargo build --release
+```
+
+#### Execution
+
+```bash
+./benchmarks.sh [optional # of runs]
+```
+
+Recommended: start with 5–10 runs for quicker initial results.
+
+#### Example Output
+
+```
+Running 3 iterations...
+Completed 1 run...
+Completed 2 runs...
+Completed 3 runs...
+
+Averages after 3 runs 
+(successful runs per label shown):
+dev 1 (3 runs): avg = 1.7196s
+dev 2 (3 runs): avg = 1.4318s
+dev 1 optional (3 runs): avg = 0.5328s
+dev 2 optional 2 (3 runs): avg = 0.4941s
+dev 3 aggr (3 runs): average = 0.5196s
+Verification time = 0.0047s
+```
+
+Performance metrics for **Table III (Plonky2)** correspond to:
+
+* $\relation_\att$: e.g., `dev 1/2 avg = 1.72s / 1.43s`
+* $\relation_\agg$: e.g., `dev 3 aggr avg = 0.52s`
+* Verification: `0.0047s`
