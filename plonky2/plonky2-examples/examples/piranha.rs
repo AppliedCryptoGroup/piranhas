@@ -168,7 +168,9 @@ fn single_client_proof(
     
     println!("Successfully generated proof with tag: {:?} and root: {:?}", &proof.public_inputs[1..5], &proof.public_inputs[5..9]);
 
+    timing = TimingTree::new("Verify", Level::Info);
     data.verify(proof.clone())
+    timing.print();
 }
 
 
