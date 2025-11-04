@@ -38,7 +38,7 @@ nargo execute
 echo "✅ Nargo execution complete"
 
 
-echo -e "\n${BOLD_GREEN}🧩 Step 3: Writing Verification Key${RESET}"
+echo -e "\n${BOLD_GREEN}🧩 Step 2: Writing Verification Key${RESET}"
 echo "---------------------------------------"
 
 if [ "$1" -eq 1 ]; then
@@ -50,7 +50,7 @@ fi
 echo "✅ Verification key written"
 
 
-echo -e "\n${BOLD_GREEN}🚧 Step 2: Proving${RESET}"
+echo -e "\n${BOLD_GREEN}🚧 Step 3: Proving${RESET}"
 echo "---------------------------------------"
 
 if [ "$1" -eq 1 ]; then
