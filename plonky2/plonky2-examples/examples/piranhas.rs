@@ -177,7 +177,9 @@ fn single_client_proof(
     
     println!("Successfully generated proof for challenge: {:?} with tag: {:?}", &proof.public_inputs[0], &proof.public_inputs[1..3]);
 
+    timing = TimingTree::new("Verify", Level::Info);
     data.verify(proof.clone())?;
+    timing.print();
 
     Ok((proof, data.verifier_only, data.common))
 }

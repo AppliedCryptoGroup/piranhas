@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Set up
-runs=100
+# Default number of runs (can override via command line argument)
+runs=${1:-100}
+
 labels=("device 1" "device 2" "device 1 optional" "device 1 optional 2" "device 2 optional" "device 2 optional 2" "device 3 aggr")
 counts=(0 0 0 0 0 0 0)
 sums=(0 0 0 0 0 0 0)
@@ -15,6 +17,7 @@ for ((i=1; i<=runs; i++)); do
 
     # Extract the first 7 times like '1.2345s to prove'
     times=($(echo "$output" | grep -oE '[0-9]+\.[0-9]+s to prove' | head -n 7 | grep -oE '[0-9]+\.[0-9]+'))
+    verify_times=($(echo "$output" | grep -oE '[0-9]+\.[0-9]+s to Verify' | head -n 1 | grep -oE '[0-9]+\.[0-9]+'))
 
     # Check we got exactly 7 values
     if [ "${#times[@]}" -ne 7 ]; then
@@ -44,3 +47,4 @@ for j in {0..6}; do
         echo "${labels[$j]} (${counts[$j]} runs): average = ${avg}s"
     fi
 done
+echo "Verification time = ${verify_times}s"
