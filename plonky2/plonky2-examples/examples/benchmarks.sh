@@ -48,3 +48,33 @@ for j in {0..6}; do
     fi
 done
 echo "Verification time = ${verify_times}s"
+
+total=0
+count=0
+
+echo ""
+echo "Running the More_Piranhas example . . . "
+
+for ((i=1; i<=runs; i++)); do
+    output=$(RUSTFLAGS="-Ctarget-cpu=native" cargo run --release --example more_piranhas 2>&1)
+
+    # Extract the proving time (e.g., 1.2345 from "1.2345s to prove")
+    time=$(echo "$output" | grep -oE '[0-9]+\.[0-9]+s to prove' | head -n 1 | grep -oE '[0-9]+\.[0-9]+')
+
+    if [[ -n "$time" ]]; then
+        total=$(echo "$total + $time" | bc)
+        count=$((count + 1))
+    else
+        echo "⚠️  Run $i: Skipped — no valid timing found."
+        continue
+    fi
+
+    echo "Completed $i runs..."
+done
+
+if (( count > 0 )); then
+    avg=$(echo "scale=4; $total / $count" | bc)
+    echo "✅ Average proving time over $count runs: ${avg}s"
+else
+    echo "❌ No valid runs found."
+fi
