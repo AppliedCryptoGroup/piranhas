@@ -1,4 +1,4 @@
-# PIRANHAS — Artifact Documentation
+# PIRANHAS — Artifact Documentation [![DOI](https://zenodo.org/badge/984052347.svg)](https://doi.org/10.5281/zenodo.17879096)
 
 ## Overview
 
