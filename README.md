@@ -16,8 +16,8 @@ Verifiers can confirm the validity of attestations without learning any identify
 We provide an **open-source implementation** using both the **Noir** and **Plonky2** frameworks, and we compare their practicality.
 We achieve an **aggregation runtime of 356 ms**.
 
-🔗 **Repository:** [https://anonymous.4open.science/r/piranhas](https://anonymous.4open.science/r/piranhas)
-📄 The repository includes all code required to reproduce the results presented in **Section V** (Tables III and IV).
+🔗 **Repository:** [https://github.com/AppliedCryptoGroup/piranhas](https://github.com/AppliedCryptoGroup/piranhas)
+📄 The repository includes all code required to reproduce the results presented in **Section V**.
 
 ---
 
@@ -26,7 +26,7 @@ We achieve an **aggregation runtime of 356 ms**.
 ### Access
 
 The implementation is publicly available at:
-👉 [https://anonymous.4open.science/r/piranhas](https://anonymous.4open.science/r/piranhas)
+👉 [https://github.com/AppliedCryptoGroup/piranhas](https://github.com/AppliedCryptoGroup/piranhas)
 
 > **Note:** A permanent GitHub link and Zenodo DOI will be added in the camera-ready version.
 
@@ -112,7 +112,7 @@ All results presented in **Section V** can be reproduced using the provided benc
 ## Major Claims
 
 We benchmarked our implementations on commodity hardware.
-This README focuses on the quantitative results reported in **Table III** and **Table IV** of **Section V**.
+This README focuses on the quantitative results reported in **Table II** of **Section V** and **Table V** in Appendix I in the full version of our paper.
 
 * **(C1)**:
   The proposed protocol $\Pi_\text{ranha}$, when implemented using **Groth16**, achieves sub-second proving time on a laptop and remains practical on constrained hardware (e.g., Raspberry Pi Zero 2 W).
@@ -255,7 +255,7 @@ dev 3 aggr (3 runs): average = 0.5196s
 Verification time = 0.0047s
 ```
 
-Performance metrics for **Table III (Plonky2)** correspond to:
+Performance metrics for **Table II (Plonky2)** correspond to:
 
 * $\relation_\att$: e.g., `dev 1/2 avg = 1.72s / 1.43s`
 * $\relation_\agg$: e.g., `dev 3 aggr avg = 0.52s`
