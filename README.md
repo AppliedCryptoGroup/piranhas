@@ -257,6 +257,6 @@ Verification time = 0.0047s
 
 Performance metrics for **Table II (Plonky2)** correspond to:
 
-* $\relation_\att$: e.g., `dev 1/2 avg = 1.72s / 1.43s`
-* $\relation_\agg$: e.g., `dev 3 aggr avg = 0.52s`
+* $\mathcal{R}_{att}$: e.g., `dev 1/2 avg = 1.72s / 1.43s`
+* $\mathcal{R}_{agg}$: e.g., `dev 3 aggr avg = 0.52s`
 * Verification: `0.0047s`
